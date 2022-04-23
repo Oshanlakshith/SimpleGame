@@ -1,56 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" onclick="jump()">
 <head>
     <meta charset="UTF-8">
-   <link href="css/normalize.css"rel="stylesheet">
-    <title>Title</title>
+    <title>Game</title>
 </head>
 <style>
     * {
-        margin: 0;
         padding: 0;
+        margin: 0;
+        overflow-x: hidden;
     }
 
-    body {
-        width: 100%;
-        height: 100vh;
-        position: relative;
-        overflow: hidden;
-    }
-
-    #ground {
-        width: 100%;
-        height: 100px;
-        background-color: green;
-        position: absolute;
-        bottom: 0;
+    .game {
+        width: 100em;
+        height: 652px;
+        margin: auto;
     }
 
     #character {
-        width: 50px;
+        width: 20px;
         height: 50px;
         background-color: red;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 100px;
-        right: calc(100% - 100px);
+        top: 602px;
+        position: relative;
     }
-    #box{
-        width:50px;
-        height: 200px;
-        background-color: blue;
+
+    #ground {
+        height: 100px;
+        width: 100em;
+        background-color: green;
         position: absolute;
-        bottom: 100px;
-        right: 0;
+        bottom: 0;
+        margin: auto;
+    }
+
+    .animate {
+        animation: jump 0.3s linear;
+    }
+
+    @keyframes jump {
+        0% {
+            top: 100px;
+        }
+        30% {
+            top: 50px;
+        }
+        70% {
+            top: 50px;
+        }
+        100% {
+            top: 100px;
+        }
+    }
+
+    #block {
+        background-color: blue;
+        width: 20px;
+        height: 20px;
+        position: relative;
+        top: 583px;
+        left: 500px;
+        animation: block 1s infinite;
+    }
+
+    @keyframes block {
+        0% {
+            left: 100em
+        }
+        100% {
+            left: -20px
+        }
+    }
+
+    p {
+        text-align: center;
     }
 </style>
 <body>
 <div id="ground"></div>
-<div id="character"></div>
-<div id="box"></div>
+<div class="game">
+    <div id="character"></div>
+    <div id="block"></div>
+</div>
+
 <script src="assets/jQuery/jquery-3.6.0.min.js"></script>
 <script>
-
+    var character = document.getElementById("character");
+    var block = document.getElementById("block");
+    var counter=0;
+    function jump(){
+        if(character.classList == "animate"){
+            return
+        }
+        character.classList.add("animate");
+        setTimeout(function(){
+            character.classList.remove("animate");
+        },500);
+    }
+    var checkDead = setInterval(function() {
+        let characterTop = parseInt(window.getComputedStyle(character).getPropertyValue("top"));
+        let blockLeft = parseInt(window.getComputedStyle(block).getPropertyValue("left"));
+        if(blockLeft<20 && blockLeft>-20 && characterTop>=130){
+            block.style.animation = "none";
+            alert("Game Over. score: "+Math.floor(counter/100));
+            counter=0;
+            block.style.animation = "block 1s infinite linear";
+        }else{
+            counter++;
+            document.getElementById("scoreSpan").innerHTML = Math.floor(counter/100);
+        }
+    }, 10);
 </script>
 </body>
 </html>
